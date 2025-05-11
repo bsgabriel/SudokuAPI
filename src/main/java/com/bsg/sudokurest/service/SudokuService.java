@@ -19,14 +19,14 @@ public class SudokuService {
     private static final int BOARD_SIZE = 9;
     private static final int SECTION_SIZE = 3;
 
-    public GameResponse generateSudoku(boolean includeFullgame) {
+    public GameResponse generateSudoku(boolean includeSolution) {
         var response = new GameResponse();
         int[][] board = new int[BOARD_SIZE][BOARD_SIZE];
 
         fillBoard(board);
 
-        if (includeFullgame) {
-            response.setFullGame(matrixToArray(deepCopy(board, BOARD_SIZE)));
+        if (includeSolution) {
+            response.setSolvedGame(matrixToArray(deepCopy(board, BOARD_SIZE)));
         }
 
         removeCells(board, 40);

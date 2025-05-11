@@ -15,8 +15,8 @@ public class SudokuController {
     private SudokuService sudokuService;
 
     @GetMapping("/generate")
-    public ResponseEntity<GameResponse> generateGame(@RequestParam(defaultValue = "false", required = false) boolean includeFullGame) {
-        return ResponseEntity.ok(sudokuService.generateSudoku(includeFullGame));
+    public ResponseEntity<GameResponse> generateGame(@RequestParam(defaultValue = "false", required = false) boolean includeSolution) {
+        return ResponseEntity.ok(sudokuService.generateSudoku(includeSolution));
     }
 
     @PostMapping("/validate")
@@ -24,5 +24,5 @@ public class SudokuController {
         return ResponseEntity.ok(sudokuService.validateSolution(solution));
     }
 
-
 }
+

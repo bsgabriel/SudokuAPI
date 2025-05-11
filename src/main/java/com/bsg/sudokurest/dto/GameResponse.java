@@ -3,7 +3,7 @@ package com.bsg.sudokurest.dto;
 public class GameResponse {
 
     private int[] puzzle;
-    private int[] fullGame;
+    private int[] solvedGame;
 
     public int[] getPuzzle() {
         return puzzle;
@@ -13,11 +13,11 @@ public class GameResponse {
         this.puzzle = puzzle;
     }
 
-    public int[] getFullGame() {
-        return fullGame;
+    public int[] getSolvedGame() {
+        return solvedGame;
     }
 
-    public void setFullGame(int[] fullGame) {
-        this.fullGame = fullGame;
+    public void setSolvedGame(int[] solvedGame) {
+        this.solvedGame = solvedGame;
     }
 }
