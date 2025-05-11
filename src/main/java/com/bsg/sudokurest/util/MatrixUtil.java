@@ -18,4 +18,12 @@ public final class MatrixUtil {
                 .toArray();
     }
 
+    public static int[][] arrayToMatrix(int[] solution, int size) {
+        int[][] matrix = new int[size][size];
+        for (int i = 0; i < solution.length; i++) {
+            matrix[i / size][i % size] = solution[i];
+        }
+
+        return matrix;
+    }
 }
