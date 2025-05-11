@@ -59,3 +59,8 @@ GET /sudoku/generate?includeSolution=true
     "message": ""
   }
   ```
+  
+## Links
+- Generate puzzle: https://sudokuapi-production.up.railway.app/sudoku/generate
+- Validation: http://sudokuapi-production.up.railway.app/sudoku/validation
+- Documentation: http://sudokuapi-production.up.railway.app/swagger-ui.html
