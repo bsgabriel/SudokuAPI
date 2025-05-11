@@ -34,7 +34,7 @@ public class SudokuService {
         return response;
     }
 
-    public void removeCells(int[][] board, int cellsToRemove) {
+    private void removeCells(int[][] board, int cellsToRemove) {
         List<int[]> positions = new ArrayList<>();
 
         for (int row = 0; row < BOARD_SIZE; row++) {
@@ -108,7 +108,7 @@ public class SudokuService {
         return numbers;
     }
 
-    public boolean isValid(int[][] board, int row, int col, int number) {
+    private boolean isValid(int[][] board, int row, int col, int number) {
 
         // Verifica todas as colunas da linha atual
         for (int c = 0; c < BOARD_SIZE; c++) {
