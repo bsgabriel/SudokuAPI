@@ -1,16 +1,17 @@
 package com.bsg.sudokurest.service;
 
 import com.bsg.sudokurest.dto.GameResponse;
+import com.bsg.sudokurest.dto.ValidationResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.bsg.sudokurest.util.MatrixUtil.deepCopy;
-import static com.bsg.sudokurest.util.MatrixUtil.matrixToArray;
+import static com.bsg.sudokurest.util.MatrixUtil.*;
 
 @Service
 public class SudokuService {
@@ -31,6 +32,49 @@ public class SudokuService {
         removeCells(board, 40);
         response.setPuzzle(matrixToArray(deepCopy(board, BOARD_SIZE)));
 
+        return response;
+    }
+
+    public ValidationResponse validateSolution(int[] solution) {
+        if (solution.length < BOARD_SIZE * BOARD_SIZE) {
+            var response = new ValidationResponse();
+            response.setValid(false);
+            response.setMessage("The solution array must contain exactly 81 values between 1 and 9");
+            return response;
+        }
+
+        boolean containsZero = Arrays.stream(solution)
+                .filter(v -> v == 0)
+                .findAny()
+                .isPresent();
+
+        if (containsZero) {
+            var response = new ValidationResponse();
+            response.setValid(false);
+            response.setMessage("The solution contains empty spaces");
+            return response;
+        }
+
+        int[][] currentBoard = arrayToMatrix(solution, BOARD_SIZE);
+        boolean isValid = true;
+
+        for (int r = 0; r < BOARD_SIZE; r++) {
+            if (!isValid) {
+                break;
+            }
+
+            for (int c = 0; c < BOARD_SIZE; c++) {
+                if (!isValid) {
+                    break;
+                }
+
+                isValid = isValid(currentBoard, r, c, currentBoard[r][c], true);
+            }
+        }
+
+        var response = new ValidationResponse();
+        response.setValid(isValid);
+        response.setMessage(!isValid ? "Invalid solution" : "");
         return response;
     }
 
@@ -80,7 +124,7 @@ public class SudokuService {
 
                 var numbers = generateShuffledNumbers();
                 for (int number : numbers) {
-                    if (!isValid(board, row, col, number)) {
+                    if (!isValid(board, row, col, number, false)) {
                         continue;
                     }
 
@@ -108,10 +152,14 @@ public class SudokuService {
         return numbers;
     }
 
-    private boolean isValid(int[][] board, int row, int col, int number) {
+    private boolean isValid(int[][] board, int row, int col, int number, boolean ignoreSelf) {
 
         // Verifica todas as colunas da linha atual
         for (int c = 0; c < BOARD_SIZE; c++) {
+            if (ignoreSelf && c == col) {
+                continue;
+            }
+
             if (board[row][c] == number) {
                 return false;
             }
@@ -119,6 +167,10 @@ public class SudokuService {
 
         // Verifica todas as linhas da coluna atual
         for (int r = 0; r < BOARD_SIZE; r++) {
+            if (ignoreSelf && r == row) {
+                continue;
+            }
+
             if (board[r][col] == number) {
                 return false;
             }
@@ -132,6 +184,10 @@ public class SudokuService {
             for (int j = 0; j < SECTION_SIZE; j++) {
                 int r = startRow + i;
                 int c = startCol + j;
+
+                if (ignoreSelf && c == col && r == row) {
+                    continue;
+                }
 
                 if (board[r][c] == number) {
                     return false;
@@ -154,7 +210,7 @@ public class SudokuService {
                 }
 
                 for (int num = 1; num <= BOARD_SIZE; num++) {
-                    if (!isValid(board, row, col, num)) {
+                    if (!isValid(board, row, col, num, false)) {
                         continue;
                     }
 
